@@ -1,39 +1,49 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AudioChipManager : MonoBehaviour {
-  
-  [SerializeField]
-  private List<AudioClip> clips;
-  
-  [SerializeField]
-  private List<Sprite> sprites;
-  
   [SerializeField]
   private GameObject audioChipPrefab;
-  
+
+  [SerializeField]
+  private SongConfig songConfig;
+
+  public SongConfig CurrentSongConfig => songConfig;
+
   private List<AudioChip> audioChips;
+
 
   [SerializeField]
   private Transform floor;
-  
+
   private bool isPlaying;
   private bool isPaused;
-  
+
   public bool IsPlaying => isPlaying;
   public bool IsPaused => isPaused;
-  
+
+  void SetSongConfig(SongConfig config) {
+    songConfig = config;
+    StartMultiTrack();
+  }
+
   void Start() {
     audioChips = new List<AudioChip>();
     StartMultiTrack();
   }
-  
+
   // Start is called once before the first execution of Update after the MonoBehaviour is created
   void StartMultiTrack() {
-    for (int i = 0; i < clips.Count; i++) {
+    foreach (AudioChip audioChip in audioChips) {
+      Destroy(audioChip);
+    }
+
+    audioChips = new List<AudioChip>();
+    for (int i = 0; i < songConfig.clips.Count; i++) {
       GameObject audioChip = Instantiate(audioChipPrefab, floor);
       // audioChip.transform.localPosition = Random.insideUnitCircle;
-      audioChip.GetComponent<AudioChip>().Initialize(clips[i], sprites[i]);
+      audioChip.GetComponent<AudioChip>().Initialize(songConfig.clips[i], songConfig.sprites[i], songConfig.trackNames[i]);
       audioChips.Add(audioChip.GetComponent<AudioChip>());
     }
     // Restart();
@@ -43,6 +53,7 @@ public class AudioChipManager : MonoBehaviour {
     foreach (AudioChip audioChip in audioChips) {
       audioChip.PauseChip();
     }
+
     isPlaying = false;
     isPaused = true;
   }
@@ -51,6 +62,7 @@ public class AudioChipManager : MonoBehaviour {
     foreach (AudioChip audioChip in audioChips) {
       audioChip.ResumeChip();
     }
+
     isPlaying = true;
     isPaused = false;
   }
@@ -59,6 +71,7 @@ public class AudioChipManager : MonoBehaviour {
     foreach (AudioChip audioChip in audioChips) {
       audioChip.StopChip();
     }
+
     isPlaying = false;
     isPaused = false;
   }
@@ -67,15 +80,20 @@ public class AudioChipManager : MonoBehaviour {
     foreach (AudioChip audioChip in audioChips) {
       audioChip.StartChip();
     }
+
     isPlaying = true;
     isPaused = false;
   }
-  
+
   // public void GetProgress()
   public float GetProgress() {
+    if (audioChips == null || audioChips.Count <= 0) {
+      return 0;
+    }
+
     return audioChips[0].GetPlaybackProgress();
   }
-  
+
 
   // Update is called once per frame
   void Update() { }

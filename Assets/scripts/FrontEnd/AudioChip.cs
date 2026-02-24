@@ -18,6 +18,18 @@ public class AudioChip : MonoBehaviour {
   
   [SerializeField]
   private Image volumeIndicator;
+
+  [SerializeField]
+  private Image nameBacking;
+
+  [SerializeField]
+  private Image nameGlass;
+  
+  [SerializeField]
+  private TMPro.TextMeshProUGUI nameText;
+  
+  
+  private bool beingDragged = false;
   
   private Color glassColor = Color.green;
 
@@ -33,9 +45,10 @@ public class AudioChip : MonoBehaviour {
   // used for calculation of audiochip movement with mouse
   private static float zDepth = 15;
   
-  public void Initialize(AudioClip clip, Sprite icon) {
+  public void Initialize(AudioClip clip, Sprite icon, string name) {
     audioSource.clip = clip;
     trackIcon.sprite = icon;
+    nameText.text = name;
   }
 
   public void StartChip() {
@@ -98,6 +111,10 @@ public class AudioChip : MonoBehaviour {
     volumeIndicator.color = glassColor;
     glassColor.a = 0.6f;
     glass.color = glassColor;
+    nameBacking.gameObject.SetActive(beingDragged);
+    if (nameGlass.enabled) {
+      nameGlass.color = glassColor;
+    }
   }
 
   private void OnMouseDrag() {
@@ -112,6 +129,12 @@ public class AudioChip : MonoBehaviour {
     // newPos.y = 0;
     // transform.position = newPos;
     // transform.localPosition = new Vector3(transform.localPosition.x, 0, transform.localPosition.z);
-    Debug.Log(newPos);
+    // Debug.Log(newPos);
+    nameBacking.gameObject.SetActive(true);
+    beingDragged = true;
+  }
+
+  private void OnMouseExit() {
+    beingDragged = false;
   }
 }
