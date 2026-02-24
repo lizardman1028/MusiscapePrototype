@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioChipManager : MonoBehaviour {
+  
   [SerializeField]
   private List<AudioClip> clips;
   
@@ -13,6 +14,9 @@ public class AudioChipManager : MonoBehaviour {
   
   private List<AudioChip> audioChips;
 
+  [SerializeField]
+  private Transform floor;
+  
   private bool isPlaying;
   private bool isPaused;
   
@@ -27,7 +31,8 @@ public class AudioChipManager : MonoBehaviour {
   // Start is called once before the first execution of Update after the MonoBehaviour is created
   void StartMultiTrack() {
     for (int i = 0; i < clips.Count; i++) {
-      GameObject audioChip = Instantiate(audioChipPrefab);
+      GameObject audioChip = Instantiate(audioChipPrefab, floor);
+      // audioChip.transform.localPosition = Random.insideUnitCircle;
       audioChip.GetComponent<AudioChip>().Initialize(clips[i], sprites[i]);
       audioChips.Add(audioChip.GetComponent<AudioChip>());
     }

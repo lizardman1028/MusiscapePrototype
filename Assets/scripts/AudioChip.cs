@@ -11,26 +11,27 @@ public class AudioChip : MonoBehaviour {
 
   [SerializeField]
   private Image trackIcon;
+  
+  [SerializeField]
+  private Image glass;
+  
+  [SerializeField]
+  private Image volumeIndicator;
+  
+  private Color glassColor = Color.green;
 
+  // Used to compute rms and db
   private static int samplePowerOf2 = 7;
-
   private static int sampleCount = (int)Math.Pow(2, samplePowerOf2);
-
   private float[] samplesL = new float[sampleCount];
   private float[] samplesR = new float[sampleCount];
   private float rmsValue;
-
   private float dbValue;
-
-  // private static int QSamples = sampleCount;
   private const float RefValue = 0.1f;
 
-
-  // Start is called once before the first execution of Update after the MonoBehaviour is created
-  void Start() {
-    transform.position = Random.insideUnitCircle * 2;
-  }
-
+  // used for calculation of audiochip movement with mouse
+  private static float zDepth = 15;
+  
   public void Initialize(AudioClip clip, Sprite icon) {
     audioSource.clip = clip;
     trackIcon.sprite = icon;
@@ -74,13 +75,26 @@ public class AudioChip : MonoBehaviour {
   // Update is called once per frame
   void Update() {
     AnalyzeAudio();
-    Debug.Log(rmsValue * 100);
-    transform.localScale = new Vector3(1 + (rmsValue * 10), 1 + (rmsValue*10), 1);
+    // Debug.Log(rmsValue * 100);
+    volumeIndicator.transform.localScale = new Vector3(0.7f + (rmsValue * 10), 0.7f + (rmsValue*10), 1);
+    glassColor = Color.Lerp(Color.green, Color.red, rmsValue * 10);
+    volumeIndicator.color = glassColor;
+    glassColor.a = 0.6f;
+    glass.color = glassColor;
   }
 
   private void OnMouseDrag() {
-    Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    newPos.z = 0; // Set z o zero so not spawning in the camera
+    Vector3 inputMousePos = Input.mousePosition;
+    inputMousePos.z = zDepth;
+    Vector3 newPos = Camera.main.ScreenToWorldPoint(inputMousePos);
+    Vector3 newLocalPos = transform.InverseTransformPoint(newPos);
+    // newLocalPos.y = 0; // Set z o zero so not spawning in the camera
+    // newLocalPos = newLocalPos / (GuiController.floorScale * 2);
+    newPos.z = inputMousePos.z + Camera.main.transform.position.z;
     transform.position = newPos;
+    // newPos.y = 0;
+    // transform.position = newPos;
+    // transform.localPosition = new Vector3(transform.localPosition.x, 0, transform.localPosition.z);
+    Debug.Log(newPos);
   }
 }
