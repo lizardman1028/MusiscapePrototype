@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -57,9 +58,15 @@ public class AudioChip : MonoBehaviour {
     return (float)audioSource.timeSamples / (float)audioSource.clip.samples;
   }
   
-  private void AnalyzeAudio() {
-    audioSource.GetOutputData(samplesL, 0);
-    audioSource.GetOutputData(samplesR, 1);
+  private void AnalyzeVolume() {
+    // audioSource.GetOutputData(samplesL, 0);
+    // audioSource.GetOutputData(samplesR, 1);
+    // audioSource.clip.
+    
+    audioSource.clip.GetData(samplesL, audioSource.timeSamples);
+    audioSource.clip.GetData(samplesR, audioSource.timeSamples);
+    
+    
     float sum = 0;
     for (int i = 0; i < sampleCount; i++) {
       sum += samplesL[i] * samplesR[i];
@@ -72,12 +79,22 @@ public class AudioChip : MonoBehaviour {
     if (dbValue < -160) dbValue = -160;
   }
 
+  private void AnalyzeFrequency() {
+    // audioSource.GetSpectrumData()
+    audioSource.GetSpectrumData(samplesL, 0, FFTWindow.Rectangular);
+    float maxFreq = samplesL.Max();
+    int maxFreqIndex = Array.IndexOf(samplesL, maxFreq);
+    float freqAsFloat = (float)maxFreqIndex / (float)samplesL.Length;
+    glassColor = Color.HSVToRGB(freqAsFloat, 0.7f, 0.7f);
+  }
+
   // Update is called once per frame
   void Update() {
-    AnalyzeAudio();
+    AnalyzeVolume();
+    AnalyzeFrequency();
     // Debug.Log(rmsValue * 100);
-    volumeIndicator.transform.localScale = new Vector3(0.7f + (rmsValue * 10), 0.7f + (rmsValue*10), 1);
-    glassColor = Color.Lerp(Color.green, Color.red, rmsValue * 10);
+    volumeIndicator.transform.localScale = new Vector3(1f + (rmsValue * 2), 1f + (rmsValue*2), 1);
+    // glassColor = Color.Lerp(Color.green, Color.red, rmsValue * 2);
     volumeIndicator.color = glassColor;
     glassColor.a = 0.6f;
     glass.color = glassColor;
