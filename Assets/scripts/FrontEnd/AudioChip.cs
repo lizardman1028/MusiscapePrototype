@@ -12,10 +12,10 @@ public class AudioChip : MonoBehaviour {
 
   [SerializeField]
   private Image trackIcon;
-  
+
   [SerializeField]
   private Image glass;
-  
+
   [SerializeField]
   private Image volumeIndicator;
 
@@ -24,27 +24,31 @@ public class AudioChip : MonoBehaviour {
 
   [SerializeField]
   private Image nameGlass;
-  
+
   [SerializeField]
   private TMPro.TextMeshProUGUI nameText;
-  
-  
+
+
   private bool beingDragged = false;
-  
+  public bool BeingDragged => beingDragged;
+
   private Color glassColor = Color.green;
 
   // Used to compute rms and db
   private static int samplePowerOf2 = 7;
   private static int sampleCount = (int)Math.Pow(2, samplePowerOf2);
+  private float[] samples = new float[sampleCount];
   private float[] samplesL = new float[sampleCount];
   private float[] samplesR = new float[sampleCount];
   private float rmsValue;
   private float dbValue;
+  private float rmsValueOutput;
+  public float RMSValueOutput => rmsValueOutput;
   private const float RefValue = 0.1f;
 
   // used for calculation of audiochip movement with mouse
   private static float zDepth = 15;
-  
+
   public void Initialize(AudioClip clip, Sprite icon, string name) {
     audioSource.clip = clip;
     trackIcon.sprite = icon;
@@ -58,7 +62,7 @@ public class AudioChip : MonoBehaviour {
   public void PauseChip() {
     audioSource.Pause();
   }
-  
+
   public void ResumeChip() {
     audioSource.UnPause();
   }
@@ -70,22 +74,22 @@ public class AudioChip : MonoBehaviour {
   public float GetPlaybackProgress() {
     return (float)audioSource.timeSamples / (float)audioSource.clip.samples;
   }
-  
+
   private void AnalyzeVolume() {
-    // audioSource.GetOutputData(samplesL, 0);
-    // audioSource.GetOutputData(samplesR, 1);
-    // audioSource.clip.
-    
-    audioSource.clip.GetData(samplesL, audioSource.timeSamples);
-    audioSource.clip.GetData(samplesR, audioSource.timeSamples);
-    
-    
+    audioSource.GetOutputData(samplesL, 0);
+    audioSource.GetOutputData(samplesR, 1);
+
+    audioSource.clip.GetData(samples, audioSource.timeSamples);
+
     float sum = 0;
+    float sumOutput = 0;
     for (int i = 0; i < sampleCount; i++) {
-      sum += samplesL[i] * samplesR[i];
+      sum += samples[i] * samples[i];
+      sumOutput += samplesL[i] * samplesR[i];
     }
 
     rmsValue = Mathf.Sqrt(sum / sampleCount);
+    rmsValueOutput = Mathf.Sqrt(sumOutput/sampleCount);
 
     dbValue = 20 * Mathf.Log10(rmsValue / RefValue);
 
@@ -97,7 +101,8 @@ public class AudioChip : MonoBehaviour {
     audioSource.GetSpectrumData(samplesL, 0, FFTWindow.Rectangular);
     float maxFreq = samplesL.Max();
     int maxFreqIndex = Array.IndexOf(samplesL, maxFreq);
-    float freqAsFloat = (float)maxFreqIndex / (float)samplesL.Length;
+    float freqAsFloat = ((float)maxFreqIndex * 0.8f) / (float)samplesL.Length;
+    freqAsFloat = Mathf.Sqrt(freqAsFloat);
     glassColor = Color.HSVToRGB(freqAsFloat, 0.7f, 0.7f);
   }
 
@@ -106,7 +111,7 @@ public class AudioChip : MonoBehaviour {
     AnalyzeVolume();
     AnalyzeFrequency();
     // Debug.Log(rmsValue * 100);
-    volumeIndicator.transform.localScale = new Vector3(1f + (rmsValue * 2), 1f + (rmsValue*2), 1);
+    volumeIndicator.transform.localScale = new Vector3(1f + (rmsValue * 2), 1f + (rmsValue * 2), 1);
     // glassColor = Color.Lerp(Color.green, Color.red, rmsValue * 2);
     volumeIndicator.color = glassColor;
     glassColor.a = 0.6f;
@@ -134,7 +139,7 @@ public class AudioChip : MonoBehaviour {
     beingDragged = true;
   }
 
-  private void OnMouseExit() {
+  private void OnMouseUp() {
     beingDragged = false;
   }
 }

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 public class PlayButtonGuiController : MonoBehaviour {
+  public static PlayButtonGuiController instance;
   [SerializeField]
   private GlassButton glassButton;
 
@@ -14,9 +15,13 @@ public class PlayButtonGuiController : MonoBehaviour {
   private AudioChipManager audioChipManager => GuiController.instance.CurrentAudioChipManager;
 
   private void Start() {
+    if (instance == null) {
+      instance = this;
+    }
     glassButton.OnClick.AddListener(ButtonPressed);
     glassButton.SetText(playText);
     glassButton.SetGlass(false);
+    ButtonToPlayState();
   }
 
   private void ButtonPressed() {
@@ -50,7 +55,7 @@ public class PlayButtonGuiController : MonoBehaviour {
   }
 
   // Set button so clicking -> play
-  private void ButtonToPlayState() {
+  public void ButtonToPlayState() {
     glassButton.SetGlass(true);
     glassButton.SetText(playText);
     glassButton.SetGlassColor(playGlassColor);

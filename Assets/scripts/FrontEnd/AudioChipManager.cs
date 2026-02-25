@@ -12,8 +12,7 @@ public class AudioChipManager : MonoBehaviour {
   public SongConfig CurrentSongConfig => songConfig;
 
   private List<AudioChip> audioChips;
-
-
+  
   [SerializeField]
   private Transform floor;
 
@@ -23,7 +22,10 @@ public class AudioChipManager : MonoBehaviour {
   public bool IsPlaying => isPlaying;
   public bool IsPaused => isPaused;
 
-  void SetSongConfig(SongConfig config) {
+  public void SetSongConfig(SongConfig config) {
+    if (config == songConfig) {
+      return;
+    }
     songConfig = config;
     StartMultiTrack();
   }
@@ -35,20 +37,28 @@ public class AudioChipManager : MonoBehaviour {
 
   // Start is called once before the first execution of Update after the MonoBehaviour is created
   void StartMultiTrack() {
+    Stop();
     foreach (AudioChip audioChip in audioChips) {
-      Destroy(audioChip);
+      Destroy(audioChip.gameObject);
     }
-
     audioChips = new List<AudioChip>();
     for (int i = 0; i < songConfig.clips.Count; i++) {
       GameObject audioChip = Instantiate(audioChipPrefab, floor);
-      // audioChip.transform.localPosition = Random.insideUnitCircle;
+      audioChip.transform.localPosition = new Vector3(-2.5f + i, 0, 2);
       audioChip.GetComponent<AudioChip>().Initialize(songConfig.clips[i], songConfig.sprites[i], songConfig.trackNames[i]);
       audioChips.Add(audioChip.GetComponent<AudioChip>());
     }
     // Restart();
   }
 
+  public float GetRMSSum() {
+    float sum = 0;
+    foreach (AudioChip audioChip in audioChips) {
+      sum += audioChip.RMSValueOutput;
+    }
+    return sum;
+  }
+  
   public void Pause() {
     foreach (AudioChip audioChip in audioChips) {
       audioChip.PauseChip();
@@ -94,6 +104,13 @@ public class AudioChipManager : MonoBehaviour {
     return audioChips[0].GetPlaybackProgress();
   }
 
+  public bool ChipBeingDragged() {
+    bool dragged = false;
+    foreach (AudioChip audioChip in audioChips) {
+      dragged |= audioChip.BeingDragged;
+    }
+    return dragged;
+  }
 
   // Update is called once per frame
   void Update() { }
