@@ -1,16 +1,26 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayButtonGuiController : MonoBehaviour {
   public static PlayButtonGuiController instance;
   [SerializeField]
   private GlassButton glassButton;
 
+  [SerializeField]
+  private Image playIcon;
+
+  [SerializeField]
+  private Image pauseIcon;
+
   private Color playGlassColor = Color.green;
   private Color pauseGlassColor = Color.yellow;
+  private Color on = Color.white;
+  private Color off = Color.clear;
 
   private static string pauseText = "Pause";
   private static string playText = "Play";
+  
 
   private AudioChipManager audioChipManager => GuiController.instance.CurrentAudioChipManager;
 
@@ -52,6 +62,8 @@ public class PlayButtonGuiController : MonoBehaviour {
     glassButton.SetGlass(true);
     glassButton.SetText(pauseText);
     glassButton.SetGlassColor(pauseGlassColor);
+    pauseIcon.color = on;
+    playIcon.color = off;
   }
 
   // Set button so clicking -> play
@@ -59,5 +71,7 @@ public class PlayButtonGuiController : MonoBehaviour {
     glassButton.SetGlass(true);
     glassButton.SetText(playText);
     glassButton.SetGlassColor(playGlassColor);
+    playIcon.color = on;
+    pauseIcon.color = off;
   }
 }

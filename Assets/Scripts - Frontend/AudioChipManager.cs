@@ -16,6 +16,14 @@ public class AudioChipManager : MonoBehaviour {
   [SerializeField]
   private Transform floor;
 
+  [SerializeField]
+  private Transform volumeSliderParent;
+  
+  [SerializeField]
+  private GameObject volumeSliderPrefab;
+  
+  private List<TrackVolumeSlider> volumeSliders;
+
   private bool isPlaying;
   private bool isPaused;
 
@@ -32,6 +40,7 @@ public class AudioChipManager : MonoBehaviour {
 
   void Start() {
     audioChips = new List<AudioChip>();
+    volumeSliders = new List<TrackVolumeSlider>();
     StartMultiTrack();
   }
 
@@ -41,12 +50,22 @@ public class AudioChipManager : MonoBehaviour {
     foreach (AudioChip audioChip in audioChips) {
       Destroy(audioChip.gameObject);
     }
+    audioChips.Clear();
+
+    foreach (TrackVolumeSlider volumeSlider in volumeSliders) {
+      Destroy(volumeSlider.gameObject);
+    }
+    volumeSliders.Clear();
+    
     audioChips = new List<AudioChip>();
     for (int i = 0; i < songConfig.clips.Count; i++) {
       GameObject audioChip = Instantiate(audioChipPrefab, floor);
-      audioChip.transform.localPosition = new Vector3(-2.5f + i, 0, 2);
+      audioChip.transform.localPosition = new Vector3(-2.5f + i, 6, 2);
       audioChip.GetComponent<AudioChip>().Initialize(songConfig.clips[i], songConfig.sprites[i], songConfig.trackNames[i]);
       audioChips.Add(audioChip.GetComponent<AudioChip>());
+      GameObject volumeSlider = Instantiate(volumeSliderPrefab, volumeSliderParent);
+      volumeSlider.GetComponent<TrackVolumeSlider>().Setup(audioChip.GetComponent<AudioChip>());
+      volumeSliders.Add(volumeSlider.GetComponent<TrackVolumeSlider>());
     }
     // Restart();
   }
@@ -93,6 +112,12 @@ public class AudioChipManager : MonoBehaviour {
 
     isPlaying = true;
     isPaused = false;
+  }
+
+  public void Scrub(float value) {
+    foreach (AudioChip audioChip in audioChips) {
+      audioChip.ScrubChip(value);
+    }
   }
 
   // public void GetProgress()

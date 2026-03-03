@@ -21,12 +21,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4e9d6660faec1410aa7617967be8fb57, type: 3}
   - {fileID: 8300000, guid: 339c42d4007ad4618b09e8b4fc5f540c, type: 3}
   sprites:
-  - {fileID: -374925201, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
-  - {fileID: -1838310794, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
-  - {fileID: -1564377206, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
-  - {fileID: 1183577543, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
-  - {fileID: 1014032283, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
-  - {fileID: 2875778220646421154, guid: 7d7196c1972d34752a67d834970d629d, type: 3}
+  - {fileID: 1588792296684869291, guid: 0c8cffd160fd24ee1906084ebe3e7ab6, type: 3}
+  - {fileID: -8171288676112627223, guid: 7a7ef7ef54e5945409a25526e01b08ea, type: 3}
+  - {fileID: 2240416240955203720, guid: ee10a8b69a7314f0fae36c31e69d0570, type: 3}
+  - {fileID: 746196864300540637, guid: 583498e68b8f14c32873313566395d6c, type: 3}
+  - {fileID: 8026614791938536093, guid: 009b37cda60504a7eb8e0bc559e70c7b, type: 3}
+  - {fileID: 1934051942017717529, guid: 501e293cb28724e83a0e86898b650447, type: 3}
   trackNames:
   - Bass
   - Drums

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c56ce0fac9f9c494fb5e2b4a4aa593f2, type: 3}
+  m_Name: BlueMonday
+  m_EditorClassIdentifier: 
+  songName: Blue Monday
+  clips:
+  - {fileID: 8300000, guid: 6ae81b478f52f4f16b9ad93b653274b6, type: 3}
+  - {fileID: 8300000, guid: d14bab39643ca483fbab4e672398a123, type: 3}
+  - {fileID: 8300000, guid: c902b72c5a631458f955bd778cb2acf9, type: 3}
+  - {fileID: 8300000, guid: 5a21e338b2acb440595976780ba4ac42, type: 3}
+  - {fileID: 8300000, guid: 8b1fc0cfef403491b8b9c8b587750118, type: 3}
+  - {fileID: 8300000, guid: f70f9f7187c434b7badba0ad17a474c6, type: 3}
+  sprites:
+  - {fileID: 1588792296684869291, guid: 0c8cffd160fd24ee1906084ebe3e7ab6, type: 3}
+  - {fileID: -8171288676112627223, guid: 7a7ef7ef54e5945409a25526e01b08ea, type: 3}
+  - {fileID: 2240416240955203720, guid: ee10a8b69a7314f0fae36c31e69d0570, type: 3}
+  - {fileID: 746196864300540637, guid: 583498e68b8f14c32873313566395d6c, type: 3}
+  - {fileID: 8026614791938536093, guid: 009b37cda60504a7eb8e0bc559e70c7b, type: 3}
+  - {fileID: 1934051942017717529, guid: 501e293cb28724e83a0e86898b650447, type: 3}
+  trackNames:
+  - Bass
+  - Drums
+  - Guitar
+  - Other
+  - Piano
+  - Vocals

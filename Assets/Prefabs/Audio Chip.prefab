@@ -433,6 +433,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 7577106389280144127}
   trackIcon: {fileID: 4618107751140691656}
+  glass: {fileID: 0}
+  volumeIndicator: {fileID: 0}
+  nameBacking: {fileID: 0}
+  nameGlass: {fileID: 0}
+  nameText: {fileID: 0}
 --- !u!1 &4231950265245620381
 GameObject:
   m_ObjectHideFlags: 0
